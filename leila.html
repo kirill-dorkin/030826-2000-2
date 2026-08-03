@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Игровой клуб Musik — Твой эпичный отдых</title>
+  <style>
+    /* ==========================================================================
+       1. ПЕРЕМЕННЫЕ И СБРОС СТИЛЕЙ
+       ========================================================================== */
+    :root {
+      --bg-dark: #0a0914;
+      --bg-card: #141226;
+      --bg-card-hover: #1c1836;
+      --accent-purple: #8a2be2;
+      --accent-neon: #00ffcc;
+      --accent-pink: #ff007f;
+      --text-main: #f0f0f8;
+      --text-muted: #a09ebc;
+      --border-color: rgba(138, 43, 226, 0.25);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* Focus visible для доступности */
+    :focus-visible {
+      outline: 2px solid var(--accent-neon);
+      outline-offset: 4px;
+    }
+
+    /* ==========================================================================
+       2. ОБЩИЕ КОМПОНЕНТЫ И СЕТКА
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 90px 0;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 0, 127, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-neon);
+      color: var(--accent-neon);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(0, 255, 204, 0.1);
+      color: var(--accent-neon);
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      margin-bottom: 16px;
+    }
+
+    /* ==========================================================================
+       3. ШАПКА (HEADER)
+       ========================================================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(10, 9, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition);
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span {
+      color: var(--accent-neon);
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      color: var(--accent-neon);
+    }
+
+    .burger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      z-index: 1001;
+    }
+
+    .burger-btn span {
+      width: 100%;
+      height: 2px;
+      background-color: var(--text-main);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* Состояние открытого бургер-меню */
+    .burger-btn.active span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    .burger-btn.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .burger-btn.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* ==========================================================================
+       4. ПЕРВЫЙ ЭКРАН (HERO)
+       ========================================================================== */
+    .hero {
+      padding-top: 160px;
+      padding-bottom: 90px;
+      position: relative;
+      background: radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(0, 255, 204, 0.1) 0%, transparent 50%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      line-height: 1.1;
+      font-weight: 900;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .hero-title span {
+      color: var(--accent-neon);
+      text-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+    }
+
+    .hero-text {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 540px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-widget {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-neon);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px var(--accent-neon);
+    }
+
+    .widget-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .widget-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .widget-item strong {
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       5. СЕКЦИЯ: ПРЕИМУЩЕСТВА
+       ========================================================================== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 30px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-neon));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: var(--bg-card-hover);
+      border-color: rgba(0, 255, 204, 0.4);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .feature-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ==========================================================================
+       6. ИНТЕРАКТИВНЫЙ ЭЛЕМЕНТ (КОНФИГУРАТОР СЕТАПА)
+       ========================================================================== */
+    .interactive-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .config-options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .option-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .chip-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .chip-btn:hover {
+      border-color: var(--accent-neon);
+    }
+
+    .chip-btn.active {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
+    }
+
+    .config-preview {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .preview-title {
+      font-size: 1.2rem;
+      color: var(--accent-neon);
+      margin-bottom: 16px;
+    }
+
+    .preview-specs {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .preview-specs li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+    }
+
+    .vibe-meter {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .vibe-fill {
+      height: 100%;
+      width: 70%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-neon));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* ==========================================================================
+       7. СЕКЦИЯ: ИГРОВЫЕ ЗОНЫ
+       ========================================================================== */
+    .zones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .zone-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .zone-tag {
+      font-size: 0.8rem;
+      color: var(--accent-pink);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .zone-name {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .zone-list {
+      list-style: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .zone-list li::before {
+      content: "• ";
+      color: var(--accent-neon);
+    }
+
+    /* ==========================================================================
+       8. СЕКЦИЯ: FAQ (АККОРДЕОН)
+       ========================================================================== */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 800px;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 20px 24px;
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--accent-neon);
+    }
+
+    .faq-icon {
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+      color: var(--accent-neon);
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding: 0 24px;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+      padding: 0 24px 20px 24px;
+      transition: max-height 0.3s cubic-bezier(1, 0, 1, 0), padding 0.3s ease;
+    }
+
+    /* ==========================================================================
+       9. СЕКЦИЯ: КОНТАКТЫ И МЕСТОПОЛОЖЕНИЕ
+       ========================================================================== */
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .location-info {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .info-item {
+      margin-bottom: 24px;
+    }
+
+    .info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .info-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .map-mock {
+      width: 100%;
+      height: 350px;
+      background: #110e24;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .map-grid-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(138, 43, 226, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(138, 43, 226, 0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .map-pin {
+      position: relative;
+      z-index: 2;
+      width: 48px;
+      height: 48px;
+      background: var(--accent-pink);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px var(--accent-pink);
+      margin-bottom: 16px;
+      animation: pulsePin 2s infinite ease-in-out;
+    }
+
+    .map-pin::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background: var(--bg-dark);
+      border-radius: 50%;
+    }
+
+    @keyframes pulsePin {
+      0%, 100% { transform: rotate(-45deg) scale(1); }
+      50% { transform: rotate(-45deg) scale(1.1); }
+    }
+
+    .map-text {
+      position: relative;
+      z-index: 2;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .map-subtext {
+      position: relative;
+      z-index: 2;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       10. ПОДВАЛ (FOOTER)
+       ========================================================================== */
+    .footer {
+      background: #05040a;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 40px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* ==========================================================================
+       11. АДАПТИВНОСТЬ (MEDIA QUERIES)
+       ========================================================================== */
+    @media (max-width: 900px) {
+      .hero-grid, .config-grid, .location-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .burger-btn {
+        display: flex;
+      }
+
+      .nav-list {
+        position: fixed;
+        top: 80px;
+        right: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: var(--bg-dark);
+        flex-direction: column;
+        justify-content: center;
+        gap: 40px;
+        transition: var(--transition);
+      }
+
+      .nav-list.active {
+        right: 0;
+      }
+
+      .nav-link {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section {
+        padding: 60px 0;
+      }
+      .hero-actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Отключение анимаций для предпочитающих уменьшенное движение */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       ШАПКА (HEADER)
+       ========================================================================== -->
+  <header class="header">
+    <div class="container header-nav">
+      <a href="#" class="logo">MUSIK<span>.</span></a>
+      <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav>
+        <ul class="nav-list" id="navList">
+          <li><a href="#hero" class="nav-link">Главная</a></li>
+          <li><a href="#features" class="nav-link">Преимущества</a></li>
+          <li><a href="#setup" class="nav-link">Конфигуратор</a></li>
+          <li><a href="#zones" class="nav-link">Зоны клуба</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li><a href="#location" class="nav-link">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         ПЕРВЫЙ ЭКРАН (HERO)
+         ========================================================================== -->
+    <section class="hero" id="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge">Твой идеальный спот</span>
+          <h1 class="hero-title">Игровой клуб <span>Musik</span></h1>
+          <p class="hero-text">
+            Место для идеального отдыха в кругу друзей. Топовые ПК, уютные консольные зоны, атмосферная подстветка и максимальный комфорт для каждого сеанса.
+          </p>
+          <div class="hero-actions">
+            <a href="#location" class="btn btn-primary">Посмотреть местоположение</a>
+            <a href="#zones" class="btn btn-secondary">Выбрать зону</a>
+          </div>
+        </div>
+
+        <div class="hero-widget" aria-live="polite">
+          <div class="widget-header">
+            <span style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Статус залов</span>
+            <span style="font-size: 0.85rem; color: var(--accent-neon); display: flex; align-items: center; gap: 6px;">
+              <span class="status-dot"></span> Открыто сейчас
+            </span>
+          </div>
+          <ul class="widget-list">
+            <li class="widget-item">
+              <span>Standard Zone (30 ПК)</span>
+              <strong>Свободно: 12</strong>
+            </li>
+            <li class="widget-item">
+              <span>VIP Bootcamps (10 ПК)</span>
+              <strong>Свободно: 4</strong>
+            </li>
+            <li class="widget-item">
+              <span>PS5 Lounge (4 зоны)</span>
+              <strong>Свободно: 2</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         СЕКЦИЯ: ПРЕИМУЩЕСТВА
+         ========================================================================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <h2 class="section-title">Почему Musik?</h2>
+        <p class="section-desc">Мы создали пространство, куда хочется возвращаться каждую неделю.</p>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Мощное железо</h3>
+            <p class="feature-text">Актуальные видеокарты и мониторы 240 Гц. Никаких просадок FPS и лагов в ответственный момент match-making.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🍕</div>
+            <h3 class="feature-title">Snack & Drinks Bar</h3>
+            <p class="feature-text">Вкусные перекусы, освежающие напитки и кофе прямо к вашему игровому месту без отрыва от катких сессий.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🪑</div>
+            <h3 class="feature-title">PRO Эргономика</h3>
+            <p class="feature-text">Анатомические кресла и десктопы с удобной регулировкой — играйте часами без усталости в спине.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🎧</div>
+            <h3 class="feature-title">Густая атмосфера</h3>
+            <p class="feature-text">Продуманный неоновый свет, мощная шумка и дружелюбное комьюнити игроков всех уровней.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ИНТЕРАКТИВНЫЙ ЭЛЕМЕНТ (КОНФИГУРАТОР СЕТАПА)
+         ========================================================================== -->
+    <section class="section" id="setup">
+      <div class="container">
+        <h2 class="section-title">Собери свой сеанс</h2>
+        <p class="section-desc">Выберите параметры и оцените уровень комфорта вашего отдыха в клубе.</p>
+
+        <div class="interactive-box">
+          <div class="config-grid">
+            <div class="config-options">
+              <div class="option-group">
+                <label>Формат отдыха</label>
+                <div class="chip-group" id="formatGroup">
+                  <button class="chip-btn active" data-value="Solo ПК">Соло катка</button>
+                  <button class="chip-btn" data-value="Party (Команда)">С друзьями</button>
+                  <button class="chip-btn" data-value="Console Lounge">PS5 / Чилаут</button>
+                </div>
+              </div>
+
+              <div class="option-group">
+                <label>Игровая зона</label>
+                <div class="chip-group" id="zoneGroup">
+                  <button class="chip-btn active" data-vibe="75" data-spec="240 Гц / RTX 4060">Standard</button>
+                  <button class="chip-btn" data-vibe="95" data-spec="360 Гц / RTX 4080 / Отдельный комната">VIP Bootcamp</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="config-preview">
+              <div>
+                <div class="preview-title">Ваш выбор:</div>
+                <ul class="preview-specs">
+                  <li><span>Режим:</span> <strong id="selectedFormat">Соло катка</strong></li>
+                  <li><span>Железо / Зона:</span> <strong id="selectedSpec">240 Гц / RTX 4060</strong></li>
+                  <li><span>Атмосфера:</span> <strong>Ламповый вайб</strong></li>
+                </ul>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                  <span>Уровень чилла:</span>
+                  <span id="vibePercent" style="color: var(--accent-neon); font-weight: 700;">75%</span>
+                </div>
+                <div class="vibe-meter">
+                  <div class="vibe-fill" id="vibeFill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         СЕКЦИЯ: ИГРОВЫЕ ЗОНЫ
+         ========================================================================== -->
+    <section class="section" id="zones">
+      <div class="container">
+        <h2 class="section-title">Зоны клуба</h2>
+        <p class="section-desc">Выбирайте удобный формат под свои задачи.</p>
+
+        <div class="zones-grid">
+          <div class="zone-card">
+            <div>
+              <span class="zone-tag">Популярно</span>
+              <h3 class="zone-name">Standard Hall</h3>
+              <ul class="zone-list">
+                <li>Мониторы 240 Гц</li>
+                <li>Видеокарты RTX 4060</li>
+                <li>Механические клавиатуры</li>
+                <li>Игровые кресла</li>
+              </ul>
+            </div>
+            <a href="#location" class="btn btn-secondary">Локация</a>
+          </div>
+
+          <div class="zone-card" style="border-color: rgba(0, 255, 204, 0.4);">
+            <div>
+              <span class="zone-tag" style="color: var(--accent-neon);">Pro Gaming</span>
+              <h3 class="zone-name">VIP Bootcamp</h3>
+              <ul class="zone-list">
+                <li>Мониторы 360 Гц</li>
+                <li>Видеокарты RTX 4080</li>
+                <li>Шумоизоляция комнаты</li>
+                <li>Отдельный климат-контроль</li>
+              </ul>
+            </div>
+            <a href="#location" class="btn btn-primary">Локация</a>
+          </div>
+
+          <div class="zone-card">
+            <div>
+              <span class="zone-tag">Релакс</span>
+              <h3 class="zone-name">Console Room</h3>
+              <ul class="zone-list">
+                <li>Консоли PlayStation 5</li>
+                <li>Большие 4K OLED ТВ</li>
+                <li>Мягкие диваны</li>
+                <li>Топ файтингов и спортивных игр</li>
+              </ul>
+            </div>
+            <a href="#location" class="btn btn-secondary">Локация</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         СЕКЦИЯ: FAQ
+         ========================================================================== -->
+    <section class="section" id="faq">
+      <div class="container">
+        <h2 class="section-title">Частые вопросы</h2>
+        <p class="section-desc">Всё, что вам нужно знать перед визитом к нам.</p>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              Нужно ли брать свои девайсы?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Необязательно! Все ПК оснащены профессиональной периферией. Но если вам комфортнее со своей мышкой или гарнитурой — вы можете легко их подключить.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              Есть ли студенческие скидки или бонусы?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Да, для студентов у нас действуют специальные дневные пакеты и бонусы при пополнении игрового баланса.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              Можно ли прийти со своей едой?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              У нас работает собственный бар с напитками и сэндвичами. Со сторонними напитками и едой вход ограничен для поддержания чистоты оборудования.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         СЕКЦИЯ: КОНТАКТЫ И МЕСТОПОЛОЖЕНИЕ
+         ========================================================================== -->
+    <section class="section" id="location">
+      <div class="container">
+        <h2 class="section-title">Как нас найти</h2>
+        <p class="section-desc">Ждём вас в гости каждый день без перерывов и выходных.</p>
+
+        <div class="location-grid">
+          <div class="location-info">
+            <div class="info-item">
+              <div class="info-title">Режим работы</div>
+              <div class="info-value">Круглосуточно (24/7)</div>
+            </div>
+            <div class="info-item">
+              <div class="info-title">Ориентир</div>
+              <div class="info-value">Центральный студенческий хаб</div>
+            </div>
+            <div class="info-item">
+              <div class="info-title">Оснащение</div>
+              <div class="info-value">30+ мощных ПК, VIP-залы, PS5</div>
+            </div>
+            <div style="margin-top: 32px;">
+              <a href="#hero" class="btn btn-primary" style="width: 100%;">Наверх к старту</a>
+            </div>
+          </div>
+
+          <!-- Интерактивная схема-карта без сторонних скриптов -->
+          <div class="map-mock">
+            <div class="map-grid-pattern"></div>
+            <div class="map-pin"></div>
+            <div class="map-text">Клуб «Musik»</div>
+            <div class="map-subtext">Главный вход с проспекта</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       ПОДВАЛ (FOOTER)
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container footer-flex">
+      <div>
+        <strong style="color: #fff; font-size: 1.1rem;">MUSIK</strong> — Пространство твоего отдыха.
+      </div>
+      <div>
+        &copy; 2026 Игровой клуб Musik. Демонстрационный проект.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       JAVASCRIPT СЦЕНАРИИ
+       ========================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      /* 1. МОБИЛЬНОЕ МЕНЮ (НАВИГАЦИЯ) */
+      const burgerBtn = document.getElementById('burgerBtn');
+      const navList = document.getElementById('navList');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      function toggleMenu() {
+        const isOpen = navList.classList.toggle('active');
+        burgerBtn.classList.toggle('active');
+        burgerBtn.setAttribute('aria-expanded', isOpen);
+      }
+
+      burgerBtn.addEventListener('click', toggleMenu);
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (navList.classList.contains('active')) {
+            toggleMenu();
+          }
+        });
+      });
+
+      /* 2. ИНТЕРАКТИВНЫЙ КОНФИГУРАТОР СЕТАПА */
+      const formatBtns = document.querySelectorAll('#formatGroup .chip-btn');
+      const zoneBtns = document.querySelectorAll('#zoneGroup .chip-btn');
+      
+      const selectedFormatEl = document.getElementById('selectedFormat');
+      const selectedSpecEl = document.getElementById('selectedSpec');
+      const vibePercentEl = document.getElementById('vibePercent');
+      const vibeFillEl = document.getElementById('vibeFill');
+
+      formatBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          formatBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedFormatEl.textContent = btn.dataset.value;
+        });
+      });
+
+      zoneBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          zoneBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const spec = btn.dataset.spec;
+          const vibe = btn.dataset.vibe;
+
+          selectedSpecEl.textContent = spec;
+          vibePercentEl.textContent = vibe + '%';
+          vibeFillEl.style.width = vibe + '%';
+        });
+      });
+
+      /* 3. FAQ АККОРДЕОН */
+      const faqQuestions = document.querySelectorAll('.faq-question');
+
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const item = question.parentElement;
+          const isActive = item.classList.contains('active');
+
+          // Закрываем другие открытые FAQ
+          document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('active');
+            i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+
+          // Тогглим текущий
+          if (!isActive) {
+            item.classList.add('active');
+            question.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>
